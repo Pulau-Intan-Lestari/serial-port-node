@@ -11,7 +11,7 @@ const readPort = new SerialPort({
 });
 
 // Set up a WebSocket connection to the server
-const ws = new WebSocket("ws://127.0.0.1:9334");
+const ws = new WebSocket("ws://c4budiman.com:9334");
 
 ws.on("open", function open() {
   console.log("WebSocket client connected");
