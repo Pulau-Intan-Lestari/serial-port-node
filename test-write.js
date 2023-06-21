@@ -1,7 +1,7 @@
 const { SerialPort } = require('serialport')
 
 const writePort = new SerialPort({
-    path: 'COM2',
+    path: 'COM4',
     baudRate: 9600,
     dataBits: 8,
     parity: 'none',
