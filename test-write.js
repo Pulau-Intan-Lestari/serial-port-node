@@ -15,7 +15,14 @@ writePort.open(function (err) {
     }
 
     // The port is now open
-    writePort.write("100", (err) => {
+    writePort.write("1234", (err) => {
+        if (err) {
+            return console.log('Error on write: ', err.message);
+        }
+        console.log('Message written to port');
+    });
+
+    writePort.write("\r\n", (err) => {
         if (err) {
             return console.log('Error on write: ', err.message);
         }

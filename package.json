@@ -1,10 +1,21 @@
 {
-  "scripts": {
-    "build": "tsc"
-  },
+  "name": "timbangan",
   "dependencies": {
     "serialport": "^11.0.0",
     "typescript": "^5.1.3",
     "ws": "^8.13.0"
+  },
+  "scripts": {
+    "start": "node timbangan-biasa.js"
+  },
+  "bin": "timbangan-gewinn.js",
+  "pkg": {
+    "outputPath": ".dist",
+    "targets": [
+      "node16-win-x64"
+    ],
+    "assets": [
+      "node_modules/@serialport/bindings-cpp/prebuilds"
+    ]
   }
 }

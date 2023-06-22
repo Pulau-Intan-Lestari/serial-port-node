@@ -17,3 +17,63 @@ https://freevirtualserialports.com/
 if you getting data in read, then the connections is successful...
 
 now test it on real device in the fields.
+
+# build it to exe with pkg.
+- npm i -g pkg
+- cd to this directory and npm i
+- configure the scripts especially this parts to suites your needs
+```js
+const wsServer = "ws://c4budiman.com:9334";
+const readoutPort = "COM7";
+const group = "gewinn-scale";
+const location = "cikampek";
+const type = 1;
+```
+- configure package.json with the one that you want to build, specify it in bin sections
+```json
+...
+"bin": "timbangan-biasa.js"
+...
+```
+- run this in this directory : `pkg .`
+- output will be on .dist/timbangan.exe rename it with your desired name.
+
+
+## params for gewinn
+
+```js
+const readPort = new SerialPort({
+  path: 'COM7',
+  baudRate: 9600,
+  dataBits: 8,
+  parity: "none",
+  stopBits: 1,
+  autoOpen: false,
+});
+```
+
+## params for little scaler
+```js
+const readPort = new SerialPort({
+  path: 'COM7',
+  baudRate: 2400,
+  dataBits: 7,
+  parity: "even",
+  stopBits: 1,
+  autoOpen: false,
+});
+```
+
+
+# groups :
+1. `little-scale`
+2. `gewinn-scale`
+
+# location: 
+1. `cikampek`
+2. `cikawung`
+
+# type :
+1 => notification weight
+2 => notification user
+3 => notification apis
