@@ -1,7 +1,7 @@
 const { SerialPort } = require("serialport");
 const WebSocket = require("ws");
 
-const wsServer = "ws://c4budiman.com:9334";
+const wsServer = "wss://api-ppic.c4budiman.com/socket-biasa";
 const readoutPort = "COM7";
 const group = "gewinn-scale";
 const location = "cikampek";
@@ -16,11 +16,28 @@ const readPort = new SerialPort({
   autoOpen: false,
 });
 
+console.log(`
+#      ____  ____  __________                         
+#     / __ \/ __ \/  _/ ____/                         
+#    / /_/ / /_/ // // /                              
+#   / ____/ _____/ // /___                            
+#  /_/   /_/   /___/\____/                                           
+#     ______                            __            
+#    / ________  ____  ____  ___  _____/ /_____  _____
+#   / /   / __ \/ __ \/ __ \/ _ \/ ___/ __/ __ \/ ___/
+#  / /___/ /_/ / / / / / / /  __/ /__/ /_/ /_/ / /    
+#  \____/\____/_/ /_/_/ /_/\___/\___/\__/\____/_/     
+#        
+# Group : ${group}
+# Location : ${location}                                       
+`)
+
 // Set up a WebSocket connection to the server
 const ws = new WebSocket(wsServer);
 
 ws.on("open", function open() {
   console.log(`WebSocket client connected to server ${wsServer}`);
+  ws.send(JSON.stringify({ subscribe: 2, clientId: `${group}-${location}` }));
 });
 
 ws.on("error", function error(err) {
