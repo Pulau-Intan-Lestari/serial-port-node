@@ -37,6 +37,14 @@ ws.on("open", function open() {
   ws.send(JSON.stringify({ subscribe: 2, clientId: `${group}-${location}` }));
 });
 
+ws.on("close", function close() {
+  console.log('Koneksi terputus... harap close dan buka kembali!')
+  console.log('program akan tertutup otomatis dalam 10 detik')
+  setTimeout(() => {
+    process.exit(0);
+  }, 10000);
+})
+
 ws.on("error", function error(err) {
   console.error("WebSocket encountered error: ", err.message);
   console.log("Harap restart aplikasi jika error tetap muncul, hubungi admin");

@@ -45,6 +45,14 @@ ws.on("error", function error(err) {
   console.log("Harap restart aplikasi jika error tetap muncul, hubungi admin");
 });
 
+ws.on("close", function close() {
+  console.log('Koneksi terputus... harap close dan buka kembali!')
+  console.log('program akan tertutup otomatis dalam 10 detik')
+  setTimeout(() => {
+    process.exit(0);
+  }, 10000);
+})
+
 readPort.open(function (err) {
   if (err) {
     console.log("Error opening read port: ", err.message);
