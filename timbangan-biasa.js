@@ -1,5 +1,6 @@
 const { SerialPort } = require("serialport");
 const WebSocket = require("ws");
+const term = require('terminal-kit').terminal;
 
 const wsServer = "wss://api-ppic.c4budiman.com/socket-biasa";
 const readoutPort = "COM7";
@@ -15,6 +16,8 @@ const readPort = new SerialPort({
   stopBits: 1,
   autoOpen: false,
 });
+
+let openws = true;
 console.log(`
 #      ____  ____  __________                         
 #     / __ \/ __ \/  _/ ____/                         
@@ -26,20 +29,22 @@ console.log(`
 #   / /   / __ \/ __ \/ __ \/ _ \/ ___/ __/ __ \/ ___/
 #  / /___/ /_/ / / / / / / /  __/ /__/ /_/ /_/ / /    
 #  \____/\____/_/ /_/_/ /_/\___/\___/\__/\____/_/     
-#                                                     
+#  ${group} - ${location}                                                   
 `)
 
 // Set up a WebSocket connection to the server
 const ws = new WebSocket(wsServer);
 
 ws.on("open", function open() {
+  openws=true
   console.log(`WebSocket client connected to server ${wsServer}`);
   ws.send(JSON.stringify({ subscribe: 2, clientId: `${group}-${location}` }));
 });
 
 ws.on("close", function close() {
-  console.log('Koneksi terputus... harap close dan buka kembali!')
+  console.log(`\nKoneksi ke ${wsServer} terputus... harap close dan buka kembali!`)
   console.log('program akan tertutup otomatis dalam 10 detik')
+  openws=false
   setTimeout(() => {
     process.exit(0);
   }, 10000);
@@ -58,12 +63,18 @@ readPort.open(function (err) {
     );
     return;
   }
+  if(!openws) {
+    return;
+  }
   console.log(`Connected to ${readoutPort}`);
   var dataWithinOneMinute = {};
   // Handle the data event
   var lineBuffer = "";
   var lastLineBuffer = "";
   readPort.on("data", function (data) {
+    if(!openws) {
+      return;
+    }
     lineBuffer += data.toString();
     if (lineBuffer.indexOf("\r\n") != -1) {
       lastLineBuffer = Number(lineBuffer.match(/\d+/g)?.join("."));
@@ -79,7 +90,12 @@ readPort.open(function (err) {
         return;
       }
       
-      console.log(`Receiving data from ${readoutPort}: ${lastLineBuffer}`);
+      // Save cursor position
+      term.saveCursor();
+      term.moveTo(1, 17);
+      term.eraseLine();
+      term(`Receiving data from ${readoutPort}: ${lastLineBuffer}`);
+      term.restoreCursor();
 
       // Keep track of data within one minute
       if (dataWithinOneMinute[lastLineBuffer]) {
@@ -105,9 +121,14 @@ readPort.open(function (err) {
     }
 
     if (mostFrequentData != null) {
-      console.log(
-        `Most frequent data within the last 10s is: ${mostFrequentData}`
-      );
+      // console.log(
+      //   `Most frequent data within the last 10s is: ${mostFrequentData}`
+      // );
+      // Move the cursor to the beginning of the line below the "Receiving data" line (e.g., 4th line)
+      term.moveTo(1, 18);
+      term.eraseLine();
+      term(`Most frequent data within the last 10s is: ${mostFrequentData}`);
+
       if (ws.readyState === WebSocket.OPEN) {
         const object = {
           group,
