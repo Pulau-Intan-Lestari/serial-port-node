@@ -3,9 +3,9 @@ const WebSocket = require("ws");
 const term = require('terminal-kit').terminal;
 
 const wsServer = "wss://devapippic.segitigamerah.com/socket-biasa";
-const readoutPort = "/dev/ttys006";
+const readoutPort = "COM1";
 const group = "gewinn-scale";
-const location = "cikampek";
+const location = "cikawung";
 const type = 1;
 
 let openws = true;

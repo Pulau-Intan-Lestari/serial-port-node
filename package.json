@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node timbangan-biasa.js"
   },
-  "bin": "timbangan-biasa.js",
+  "bin": "timbangan-gewinn-dev.js",
   "pkg": {
     "outputPath": ".dist",
     "targets": [
